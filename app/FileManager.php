@@ -16,22 +16,23 @@ class FileManager
 
         foreach ($csvFilesPath as $path) {
             $rawData = array_map('str_getcsv', file($path));
-            $csvData[] = $this->mapKeyValuePairs($rawData[0], $rawData);
+            $csvData[] = $this->mapKeyValuePairs($rawData);
         }
 
         foreach ($csvData as $data) {
-            $headers[] = array_shift($data);
+            foreach ($data as $value) {
+                $headers[] = array_keys($value);
+            }
         }
 
         $csvOutputHeader = $this->combineHeaders(...$headers);
         $csvOutputData = $this->buildOutputFile($csvOutputHeader, ...$csvData);
-
         $this->saveOutput($csvOutputHeader, $csvOutputData);
 
         return $csvOutputData;
     }
 
-    private function combineHeaders(array ...$headers): array
+    public function combineHeaders(array ...$headers): array
     {
         $resultHeader = [];
         foreach ($headers as $header) {
@@ -45,26 +46,31 @@ class FileManager
         return $resultHeader;
     }
 
-    private function mapKeyValuePairs(array $header, array $csvData): array
+    public function mapKeyValuePairs(array $csvData): array
     {
+        $rawData = $csvData;
+        $keys = $rawData[0];
+        array_shift($rawData);
         $result = [];
 
-        foreach ($csvData as $data) {
-            $result[] = array_combine($header, $data);
+        foreach ($rawData as $data) {
+            $keyValuePairs = array_combine($keys, $data);
+            $result[] = $keyValuePairs;
         }
 
         return $result;
     }
 
-    private function buildOutputFile(array $header, array ...$csvFileData): array
+    public function buildOutputFile(array $header, array ...$csvFileData): array
     {
+
+//        var_dump($csvFileData);
+//        echo PHP_EOL;
+//        echo PHP_EOL;
+//        echo PHP_EOL;
         $result = [];
-
         foreach ($csvFileData as $csvData) {
-            $data = $csvData;
-            array_shift($data);
-
-            foreach ($data as $record) {
+            foreach ($csvData as $record) {
                 $output = [];
                 foreach ($record as $key => $value) {
                     $output[$key] = $value;
