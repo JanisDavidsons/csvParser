@@ -16,6 +16,8 @@ class FileManager implements FileManagerInterface
 
         foreach ($csvFilesPath as $path) {
             $rawData = array_map('str_getcsv', file($path));
+            var_dump($csvFilesPath);
+
             $csvData[] = $this->mapKeyValuePairs($rawData);
         }
 
@@ -24,7 +26,6 @@ class FileManager implements FileManagerInterface
                 $headers[] = array_keys($value);
             }
         }
-
         $csvOutputHeader = $this->combineHeaders(...$headers);
         $csvOutputData = $this->buildOutputFile($csvOutputHeader, ...$csvData);
         $this->saveOutput($csvOutputHeader, $csvOutputData);

@@ -8,5 +8,5 @@ $fileManager = new FileManager();
 $fileManager->generateCsvFile(
     config()->get('demo.input1'),
     config()->get('demo.input2'),
-    config()->get('demo.input2'),
+    config()->get('demo.input3'),
 );
