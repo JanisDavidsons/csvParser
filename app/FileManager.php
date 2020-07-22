@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-define("OUTPUT", "./app/outputFile/output.csv");
+use App\interfaces\FileManagerInterface;
 
-class FileManager
+class FileManager implements FileManagerInterface
 {
     public function generateCsvFile(string ...$csvFilesPath): array
     {
@@ -63,11 +63,6 @@ class FileManager
 
     public function buildOutputFile(array $header, array ...$csvFileData): array
     {
-
-//        var_dump($csvFileData);
-//        echo PHP_EOL;
-//        echo PHP_EOL;
-//        echo PHP_EOL;
         $result = [];
         foreach ($csvFileData as $csvData) {
             foreach ($csvData as $record) {
@@ -82,9 +77,9 @@ class FileManager
         return $result;
     }
 
-    private function saveOutput(array $header, array $data)
+    private function saveOutput(array $header, array $data): void
     {
-        $file = fopen(OUTPUT, 'w');
+        $file = fopen(config()->get('output.path'), 'w');
         fputcsv($file, array_keys($header));
         foreach ($data as $value) {
             fputcsv($file, $value);

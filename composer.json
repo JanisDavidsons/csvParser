@@ -4,8 +4,11 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app"
-        }
+            "App\\": "app/"
+        },
+        "files": [
+            "helpers.php"
+        ]
     },
     "require-dev": {
         "mockery/mockery": "^1.4"
